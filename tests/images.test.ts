@@ -1,4 +1,4 @@
-import {axiosInstance, baseURL} from '../utils/axiosInstance';
+import { axiosInstance, baseURL } from '../utils/axiosInstance';
 import axios from 'axios';
 
 describe('GET /images - Retrieve all images', () => {
@@ -10,10 +10,14 @@ describe('GET /images - Retrieve all images', () => {
 
     it('should return 401 if no API key is provided', async () => {
         try {
-            const res = await axios.get(`${baseURL}/images`); // No API key
+            await axios.get(`${baseURL}/images`); // No API key
+            throw new Error('Request should have throw new Errored with 401 but succeeded');
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 expect(error.response.status).toBe(401);
+            } else {
+                console.log(error)
+                throw error;
             }
         }
     });
@@ -25,9 +29,12 @@ describe('GET /images - Retrieve all images', () => {
                     'X-Api-Key': 'wrong-key',
                 }
             });
+            throw new Error('Request should have throw new Errored with 403 but succeeded');
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 expect(error.response.status).toBe(403);
+            } else {
+                throw error;
             }
         }
     });
