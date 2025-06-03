@@ -94,4 +94,20 @@ describe('POST /images/search - Search for images', () => {
             }
         }
     });
+
+    it('should return 400 if "searchQuery" is only whitespace', async () => {
+        try {
+            await axiosInstance.post(endpoint, {
+                searchQuery: "   "
+            });
+            throw new Error('Request should have failed with 400 but succeeded');
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                expect(error.response.status).toBe(400);
+                expect(error.response.data.message).toBe('Search query is required.');
+            } else {
+                throw error;
+            }
+        }
+    });
 });
